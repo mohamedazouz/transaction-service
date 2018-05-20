@@ -2,6 +2,7 @@ package com.azouz.transactionservice.rest;
 
 import com.azouz.transactionservice.domain.Transaction;
 import com.azouz.transactionservice.domain.TransactionStats;
+import com.azouz.transactionservice.exception.NotValidTimestampException;
 import com.azouz.transactionservice.service.TransactionService;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -22,27 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(TransactionController.NAMESPACE)
 public class TransactionController {
-    public static final String NAMESPACE = "transaction";
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
+  public static final String NAMESPACE = "transaction";
 
-    final TransactionService transactionService;
+  private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
 
-    public TransactionController(final TransactionService transactionService) {
-        this.transactionService = transactionService;
+  final TransactionService transactionService;
 
-    }
+  public TransactionController(final TransactionService transactionService) {
+    this.transactionService = transactionService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Void> createTransaction(@RequestBody @Valid final Transaction transaction) {
-        transactionService.insertTransaction(transaction);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+  }
+
+  @RequestMapping(method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<Void> createTransaction(@RequestBody @Valid final Transaction transaction)
+      throws NotValidTimestampException {
+    transactionService.insertTransaction(transaction);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+  }
 
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public TransactionStats getTransactions() {
-        return transactionService.getTransactionStats();
-    }
+  @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public TransactionStats getTransactions() {
+    return transactionService.getTransactionStats();
+  }
 }

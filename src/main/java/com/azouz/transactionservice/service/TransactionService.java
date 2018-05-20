@@ -2,35 +2,37 @@ package com.azouz.transactionservice.service;
 
 import com.azouz.transactionservice.domain.Transaction;
 import com.azouz.transactionservice.domain.TransactionStats;
+import com.azouz.transactionservice.exception.NotValidTimestampException;
 import com.google.common.collect.Lists;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.text.MessageFormat;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Seconds;
 
 /**
  * @author mazouz
  */
 public class TransactionService {
 
+  public static final int MAX_MILLISECONDS = 60000;
   private final ConcurrentHashMap<Long, List<Double>> transactionTimeMap;
 
   public TransactionService() {
     transactionTimeMap = new ConcurrentHashMap<>();
   }
 
-  public void insertTransaction(final Transaction transaction) {
-    List<Double> transactions = transactionTimeMap.get(transaction.getTimestamp());
+  public void insertTransaction(final Transaction transaction) throws NotValidTimestampException {
+    long timestamp = transaction.getTimestamp();
+    if (!isValidTimestamp(timestamp)) {
+      throw new NotValidTimestampException(
+          MessageFormat.format("not valid timestamp: {0}", timestamp));
+    }
+    List<Double> transactions = transactionTimeMap.get(timestamp);
     if (transactions == null) {
       transactions = Lists.newArrayList();
     }
@@ -38,10 +40,18 @@ public class TransactionService {
     transactionTimeMap.put(transaction.getTimestamp(), transactions);
   }
 
+  private boolean isValidTimestamp(final Long timestamp) {
+    long timeDiff = getCurrentTimestamp() - timestamp;
+    if (timeDiff > MAX_MILLISECONDS) {
+      return false;
+    }
+    return true;
+  }
+
 
   public TransactionStats getTransactionStats() {
     final long currentTimestamp = getCurrentTimestamp();
-    final Long last60Seconds = currentTimestamp - 60000;
+    final Long last60Seconds = currentTimestamp - MAX_MILLISECONDS;
     final Stream transActionsStreem = LongStream
         .rangeClosed(last60Seconds, currentTimestamp)
         .mapToObj(index -> transactionTimeMap.get(index))
