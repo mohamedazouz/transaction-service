@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @author mazouz
  */
 @RestController
-@RequestMapping(TransactionController.NAMESPACE)
 public class TransactionController {
 
-  public static final String NAMESPACE = "/transaction";
+  public static final String TRANSACTION_NAMESPACE = "/transaction";
+  public static final String STATISTICS_NAMESPACE = "/statistics";
 
   private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
 
@@ -35,7 +35,7 @@ public class TransactionController {
 
   }
 
-  @RequestMapping(method = RequestMethod.POST)
+  @RequestMapping(path = TRANSACTION_NAMESPACE, method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Void> createTransaction(@RequestBody @Valid final Transaction transaction)
       throws NotValidTimestampException {
@@ -44,7 +44,7 @@ public class TransactionController {
   }
 
 
-  @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(path = STATISTICS_NAMESPACE, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public TransactionStats getTransactions() {
     return transactionService.getTransactionStats();
   }

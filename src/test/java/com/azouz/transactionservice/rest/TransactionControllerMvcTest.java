@@ -55,7 +55,7 @@ public class TransactionControllerMvcTest {
         .withAmount(3.0)
         .withTimestamp(getCurrentTimestamp());
     final ObjectMapper mapper = new ObjectMapper();
-    mockMvc.perform(post(TransactionController.NAMESPACE)
+    mockMvc.perform(post(TransactionController.TRANSACTION_NAMESPACE)
         .contentType(APPLICATION_JSON)
         .content(mapper.writeValueAsString(transactionBuilder.build())))
         .andExpect(status().isCreated());
@@ -66,7 +66,7 @@ public class TransactionControllerMvcTest {
     final ObjectMapper mapper = new ObjectMapper();
     final TransactionStats expectedStats = TransactionStats.builder()
         .withAvg(3.0).withCount(1).withSum(3).withMax(3).withMin(3).build();
-    mockMvc.perform(get(TransactionController.NAMESPACE)
+    mockMvc.perform(get(TransactionController.STATISTICS_NAMESPACE)
         .contentType(APPLICATION_JSON))
         .andExpect(result -> {
           final String json = result.getResponse().getContentAsString();
