@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(TransactionController.NAMESPACE)
 public class TransactionController {
 
-  public static final String NAMESPACE = "transaction";
+  public static final String NAMESPACE = "/transaction";
 
   private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
 

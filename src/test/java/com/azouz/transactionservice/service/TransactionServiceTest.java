@@ -1,12 +1,11 @@
 package com.azouz.transactionservice.service;
 
+import static com.azouz.transactionservice.DateUtils.getCurrentTimestamp;
 import static org.junit.Assert.assertEquals;
 
 import com.azouz.transactionservice.domain.Transaction;
 import com.azouz.transactionservice.domain.TransactionStats;
 import com.azouz.transactionservice.exception.NotValidTimestampException;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -89,7 +88,5 @@ public class TransactionServiceTest {
     assertEquals(expectedStats, actualStats);
   }
 
-  private static long getCurrentTimestamp() {
-    return DateTime.now(DateTimeZone.UTC).getMillis();
-  }
+
 }
