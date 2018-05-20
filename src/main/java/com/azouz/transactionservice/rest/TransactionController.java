@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TransactionController {
 
-  public static final String TRANSACTION_NAMESPACE = "/transaction";
+  public static final String TRANSACTION_NAMESPACE = "/transactions";
   public static final String STATISTICS_NAMESPACE = "/statistics";
 
   private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);

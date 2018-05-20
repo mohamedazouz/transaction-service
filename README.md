@@ -21,7 +21,7 @@ Run locally
 
 EndPoints:
 ----------
-* /transaction POST
+* /transactions POST
   * For adding new transaction
   * ex. request:
   Body
