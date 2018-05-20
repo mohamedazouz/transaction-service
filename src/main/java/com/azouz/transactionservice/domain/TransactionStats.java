@@ -61,6 +61,22 @@ public class TransactionStats {
   }
 
   @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final TransactionStats that = (TransactionStats) o;
+    return Double.compare(that.sum, sum) == 0 &&
+        Double.compare(that.avg, avg) == 0 &&
+        Double.compare(that.max, max) == 0 &&
+        Double.compare(that.min, min) == 0 &&
+        count == that.count;
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hashCode(sum, avg, max, min, count);
   }
